@@ -37,6 +37,7 @@ export default function BooksSection() {
   const [autores, setAutores] = useState([]);
   const [imagen, setImagen] = useState(null);
   const [imagenPreview, setImagenPreview] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -121,6 +122,10 @@ export default function BooksSection() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     crud.setError("");
 
     const camposFaltantes = [];
@@ -149,6 +154,7 @@ export default function BooksSection() {
 
     if (camposFaltantes.length > 0) {
       crud.setError("Faltan completar los campos obligatorios");
+      setIsSubmitting(false);
       return;
     }
 
@@ -242,6 +248,7 @@ export default function BooksSection() {
               } else {
                 crud.setError("Error al actualizar imagen");
               }
+              setIsSubmitting(false);
               return;
             }
           }
@@ -263,6 +270,8 @@ export default function BooksSection() {
     } catch (err) {
       console.error("Error en handleSubmit:", err);
       crud.setError("Error al conectar con el servidor");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -597,7 +606,7 @@ export default function BooksSection() {
                     <label
                       htmlFor="libro-imagen-upload"
                       className={`block w-64 h-80 border-2 border-dashed border-gray-300 rounded-lg ${
-                        crud.loading
+                        isSubmitting
                           ? "cursor-not-allowed opacity-50"
                           : "cursor-pointer hover:border-[#0071a4]"
                       } transition bg-gray-50 overflow-hidden`}
@@ -609,7 +618,7 @@ export default function BooksSection() {
                             alt="Preview"
                             className="w-full h-full object-cover"
                           />
-                          {!crud.loading && (
+                          {!isSubmitting && (
                             <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition flex items-center justify-center">
                               <div className="text-white text-center">
                                 <svg
@@ -662,7 +671,7 @@ export default function BooksSection() {
                       accept="image/jpeg,image/png,image/jpg"
                       onChange={handleImageChange}
                       className="hidden"
-                      disabled={crud.loading}
+                      disabled={isSubmitting}
                     />
                     {imagenPreview && (
                       <button
@@ -673,7 +682,7 @@ export default function BooksSection() {
                           document.getElementById("libro-imagen-upload").value =
                             "";
                         }}
-                        disabled={crud.loading}
+                        disabled={isSubmitting}
                         className="mt-2 w-full px-3 py-2 bg-red-50 text-red-600 text-sm rounded-lg hover:bg-red-100 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <svg
@@ -708,7 +717,7 @@ export default function BooksSection() {
                       required
                       value={form.formData.titulo}
                       onChange={form.handleInputChange}
-                      disabled={crud.loading}
+                      disabled={isSubmitting}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                   </div>
@@ -724,7 +733,7 @@ export default function BooksSection() {
                         name="categoria_id"
                         value={form.formData.categoria_id}
                         onChange={form.handleInputChange}
-                        disabled={crud.loading}
+                        disabled={isSubmitting}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <option value="">Seleccionar categoría</option>
@@ -744,7 +753,7 @@ export default function BooksSection() {
                         name="editorial"
                         value={form.formData.editorial}
                         onChange={form.handleInputChange}
-                        disabled={crud.loading}
+                        disabled={isSubmitting}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                     </div>
@@ -762,7 +771,7 @@ export default function BooksSection() {
                         name="fecha_publicacion"
                         value={form.formData.fecha_publicacion}
                         onChange={form.handleInputChange}
-                        disabled={crud.loading}
+                        disabled={isSubmitting}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                     </div>
@@ -775,7 +784,7 @@ export default function BooksSection() {
                         name="autor_id"
                         value={form.formData.autor_id}
                         onChange={form.handleInputChange}
-                        disabled={crud.loading}
+                        disabled={isSubmitting}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <option value="">Seleccionar autor</option>
@@ -798,7 +807,7 @@ export default function BooksSection() {
                       name="descripcion"
                       value={form.formData.descripcion}
                       onChange={form.handleInputChange}
-                      disabled={crud.loading}
+                      disabled={isSubmitting}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] resize-none disabled:opacity-50 disabled:cursor-not-allowed"
                       placeholder="Descripción del libro"
                     />
@@ -809,17 +818,17 @@ export default function BooksSection() {
                 <button
                   type="button"
                   onClick={modal.closeModal}
-                  disabled={crud.loading}
+                  disabled={isSubmitting}
                   className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  disabled={crud.loading}
+                  disabled={isSubmitting}
                   className="px-6 py-2.5 bg-[#0071a4] text-white rounded-lg hover:bg-[#005a85] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
-                  {crud.loading && (
+                  {isSubmitting && (
                     <svg
                       className="animate-spin h-4 w-4"
                       fill="none"
@@ -840,7 +849,7 @@ export default function BooksSection() {
                       />
                     </svg>
                   )}
-                  {crud.loading
+                  {isSubmitting
                     ? "Guardando..."
                     : modal.mode === "create"
                     ? "Crear Libro"
