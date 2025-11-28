@@ -421,7 +421,8 @@ export default function PrestamosSection() {
               </h3>
               <button
                 onClick={modal.closeModal}
-                className="text-gray-400 hover:text-gray-600 transition"
+                disabled={crud.loading}
+                className="text-gray-400 hover:text-gray-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg
                   className="w-6 h-6"
@@ -461,7 +462,8 @@ export default function PrestamosSection() {
                     }, 200)
                   }
                   placeholder="Buscar usuario..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4]"
+                  disabled={crud.loading}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] disabled:opacity-50 disabled:cursor-not-allowed"
                   required
                 />
                 {showUsuarioSuggestions && getFilteredUsuarios().length > 0 && (
@@ -514,7 +516,8 @@ export default function PrestamosSection() {
                     }, 200)
                   }
                   placeholder="Buscar por título o código..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4]"
+                  disabled={crud.loading}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] disabled:opacity-50 disabled:cursor-not-allowed"
                   required
                 />
                 {showEjemplarSuggestions &&
@@ -569,7 +572,9 @@ export default function PrestamosSection() {
                       fecha_prestamo: e.target.value,
                     })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4]"
+                  max={new Date().toISOString().split("T")[0]}
+                  disabled={crud.loading}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] disabled:opacity-50 disabled:cursor-not-allowed"
                   required
                 />
               </div>
@@ -589,7 +594,8 @@ export default function PrestamosSection() {
                       fecha_devolucion_esperada: e.target.value,
                     })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4]"
+                  disabled={crud.loading}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] disabled:opacity-50 disabled:cursor-not-allowed"
                   required
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -607,15 +613,37 @@ export default function PrestamosSection() {
                 <button
                   type="button"
                   onClick={modal.closeModal}
-                  className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+                  disabled={crud.loading}
+                  className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={crud.loading || ejemplares.length === 0}
-                  className="px-6 py-2.5 bg-[#0071a4] text-white rounded-lg hover:bg-[#005a85] transition disabled:opacity-50"
+                  className="px-6 py-2.5 bg-[#0071a4] text-white rounded-lg hover:bg-[#005a85] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
+                  {crud.loading && (
+                    <svg
+                      className="animate-spin h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                  )}
                   {crud.loading ? "Creando..." : "Crear Préstamo"}
                 </button>
               </div>
