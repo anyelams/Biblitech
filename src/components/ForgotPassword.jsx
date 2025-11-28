@@ -106,7 +106,7 @@ export default function ForgotPassword({ onBackToLogin }) {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0071a4] focus:border-transparent transition"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0071a4] focus:border-transparent transition disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Ingresa tu correo electrónico"
                   disabled={loading}
                 />
@@ -157,7 +157,8 @@ export default function ForgotPassword({ onBackToLogin }) {
           <div className="mt-6 text-center">
             <button
               onClick={onBackToLogin}
-              className="text-blue-500 text-sm font-semibold hover:underline inline-flex items-center gap-1"
+              disabled={loading}
+              className="text-blue-500 text-sm font-semibold hover:underline inline-flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
