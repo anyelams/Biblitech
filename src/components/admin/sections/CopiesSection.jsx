@@ -37,6 +37,7 @@ export default function CopiesSection() {
   const [showEstadoModal, setShowEstadoModal] = useState(false);
   const [ejemplarToChangeEstado, setEjemplarToChangeEstado] = useState(null);
   const [nuevoEstadoId, setNuevoEstadoId] = useState("");
+  const [isChangingEstado, setIsChangingEstado] = useState(false);
 
   useEffect(() => {
     fetchLibros();
@@ -142,8 +143,10 @@ export default function CopiesSection() {
   const handleSubmitEstadoEjemplar = async (e) => {
     e.preventDefault();
     if (!ejemplarToChangeEstado) return;
-    crud.setLoading(true);
+
+    setIsChangingEstado(true);
     crud.setError("");
+
     try {
       const token = localStorage.getItem("biblitech_access_token");
       const response = await fetch(
@@ -172,7 +175,7 @@ export default function CopiesSection() {
       console.error("Error al actualizar estado:", err);
       setTimeout(() => crud.fetchAll(), 2000);
     } finally {
-      crud.setLoading(false);
+      setIsChangingEstado(false);
     }
   };
 
@@ -583,7 +586,7 @@ export default function CopiesSection() {
                   onChange={(e) => setNuevoEstadoId(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] disabled:opacity-50 disabled:cursor-not-allowed"
                   required
-                  disabled={crud.loading}
+                  disabled={isChangingEstado}
                 >
                   <option value="">Seleccionar estado</option>
                   {estadosEjemplar.map((estado) => (
@@ -602,17 +605,17 @@ export default function CopiesSection() {
                 <button
                   type="button"
                   onClick={() => setShowEstadoModal(false)}
-                  disabled={crud.loading}
+                  disabled={isChangingEstado}
                   className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  disabled={crud.loading}
+                  disabled={isChangingEstado}
                   className="px-6 py-2.5 bg-[#0071a4] text-white rounded-lg hover:bg-[#005a85] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
-                  {crud.loading && (
+                  {isChangingEstado && (
                     <svg
                       className="animate-spin h-4 w-4"
                       fill="none"
@@ -633,7 +636,7 @@ export default function CopiesSection() {
                       />
                     </svg>
                   )}
-                  {crud.loading ? "Actualizando..." : "Actualizar Estado"}
+                  {isChangingEstado ? "Actualizando..." : "Actualizar Estado"}
                 </button>
               </div>
             </form>
