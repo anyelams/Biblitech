@@ -32,6 +32,20 @@ export default function Register({ onSwitchToLogin }) {
     setTouched({ ...touched, [e.target.name]: true });
   };
 
+  // Función para validar solo texto
+  const handleTextInput = (e) => {
+    const { name, value } = e.target;
+    const textValue = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, "");
+    setFormData({ ...formData, [name]: textValue });
+  };
+
+  // Función para validar solo números
+  const handleNumericInput = (e) => {
+    const { name, value } = e.target;
+    const numericValue = value.replace(/\D/g, "");
+    setFormData({ ...formData, [name]: numericValue });
+  };
+
   /* ------------------------- VALIDACIONES ------------------------- */
 
   const validateStep1 = () => {
