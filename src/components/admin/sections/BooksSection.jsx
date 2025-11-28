@@ -19,6 +19,38 @@ export default function BooksSection() {
     defaultSortOrder: "asc",
   });
 
+  // Aplicar filtro manualmente sobre todos los datos
+  const finalFilteredData = crud.data.filter((libro) => {
+    // Aplicar filtros de categoría si existe
+    if (
+      filtering.filters.categoria_id &&
+      libro.categoria_id !== parseInt(filtering.filters.categoria_id)
+    ) {
+      return false;
+    }
+
+    // Si no hay término de búsqueda, solo aplicar filtros
+    if (!filtering.searchTerm) return true;
+
+    const searchLower = filtering.searchTerm.toLowerCase();
+
+    // Verificar si coincide con título
+    const matchesTitle = libro.titulo.toLowerCase().includes(searchLower);
+
+    // Verificar si coincide con editorial
+    const matchesEditorial = libro.editorial
+      ?.toLowerCase()
+      .includes(searchLower);
+
+    // Verificar si coincide con autores
+    const matchesAuthors = libro.autores?.some((autor) =>
+      `${autor.nombre} ${autor.apellido}`.toLowerCase().includes(searchLower)
+    );
+
+    // Retornar true si coincide con cualquiera de los criterios
+    return matchesTitle || matchesEditorial || matchesAuthors;
+  });
+
   const modal = useModal();
   const deleteModal = useModal();
   const viewModal = useModal();
@@ -328,7 +360,7 @@ export default function BooksSection() {
         <SearchInput
           value={filtering.searchTerm}
           onChange={filtering.setSearchTerm}
-          placeholder="Buscar por título, descripción o editorial..."
+          placeholder="Buscar por título, autor o editorial..."
         />
 
         <FilterSelect
@@ -345,7 +377,7 @@ export default function BooksSection() {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         {crud.loading ? (
           <LoadingSpinner message="Cargando libros..." />
-        ) : filtering.filteredData.length === 0 ? (
+        ) : finalFilteredData.length === 0 ? (
           <EmptyState
             hasSearch={true}
             searchTerm={filtering.searchTerm}
@@ -408,7 +440,7 @@ export default function BooksSection() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filtering.filteredData.map((libro) => (
+                {finalFilteredData.map((libro) => (
                   <tr key={libro.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 text-center">
                       {libro.id}
