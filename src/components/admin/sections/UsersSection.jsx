@@ -83,6 +83,21 @@ export default function UsersSection() {
     }
   };
 
+  // Función para validar solo números
+  const handleNumericInput = (e) => {
+    const { name, value } = e.target;
+    // Solo permite números
+    const numericValue = value.replace(/\D/g, "");
+    form.setValues({ ...form.formData, [name]: numericValue });
+  };
+
+  const handleTextInput = (e) => {
+    const { name, value } = e.target;
+    // Solo permite letras y espacios
+    const textValue = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, "");
+    form.setValues({ ...form.formData, [name]: textValue });
+  };
+
   const handleCreate = () => {
     form.resetForm();
     setCurrentStep(1);
@@ -706,7 +721,7 @@ export default function UsersSection() {
                         type="text"
                         name="nombre"
                         value={form.formData.nombre}
-                        onChange={form.handleInputChange}
+                        onChange={handleTextInput}
                         required
                         disabled={crud.loading}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -720,7 +735,7 @@ export default function UsersSection() {
                         type="text"
                         name="apellido"
                         value={form.formData.apellido}
-                        onChange={form.handleInputChange}
+                        onChange={handleTextInput}
                         required
                         disabled={crud.loading}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -733,11 +748,13 @@ export default function UsersSection() {
                         Teléfono
                       </label>
                       <input
-                        type="tel"
+                        type="text"
                         name="telefono"
                         value={form.formData.telefono}
-                        onChange={form.handleInputChange}
+                        onChange={handleNumericInput}
                         disabled={crud.loading}
+                        pattern="[0-9]*"
+                        inputMode="numeric"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                     </div>
@@ -876,12 +893,14 @@ export default function UsersSection() {
                         <span className="text-red-500">*</span>
                       </label>
                       <input
-                        type="number"
+                        type="text"
                         name="documento"
                         value={form.formData.documento}
-                        onChange={form.handleInputChange}
+                        onChange={handleNumericInput}
                         required
                         disabled={crud.loading}
+                        pattern="[0-9]*"
+                        inputMode="numeric"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                     </div>
@@ -893,11 +912,13 @@ export default function UsersSection() {
                         Teléfono
                       </label>
                       <input
-                        type="tel"
+                        type="text"
                         name="telefono"
                         value={form.formData.telefono}
-                        onChange={form.handleInputChange}
+                        onChange={handleNumericInput}
                         disabled={crud.loading}
+                        pattern="[0-9]*"
+                        inputMode="numeric"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0071a4] disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                     </div>
